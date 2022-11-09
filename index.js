@@ -26,6 +26,7 @@ async function run() {
     const serviceCollection = client
       .db("sportsPhotgraphy")
       .collection("services");
+    const reviewCollection = client.db("sportsPhotgraphy").collection("review");
 
     //get limit sevices
     app.get("/services", async (req, res) => {
@@ -51,6 +52,7 @@ async function run() {
       res.send(service);
     });
 
+    //add service post method
     app.post("/services", async (req, res) => {
       const add = req.body;
       const result = await serviceCollection.insertOne(add);
