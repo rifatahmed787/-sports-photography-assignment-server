@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 
@@ -27,7 +27,7 @@ async function run() {
       .db("sportsPhotgraphy")
       .collection("services");
 
-    //get by services name
+    //get limit sevices
     app.get("/services", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
@@ -35,13 +35,27 @@ async function run() {
       res.send(services);
     });
 
+    //get all the services
+    app.get("/service", async (req, res) => {
+      const query = {};
+      const cursor = serviceCollection.find(query);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+
     //get by services id
-    // app.get("/services/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const service = await serviceCollection.findOne(query);
-    //   res.send(service);
-    // });
+    app.get("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await serviceCollection.findOne(query);
+      res.send(service);
+    });
+
+    app.post("/services", async (req, res) => {
+      const add = req.body;
+      const result = await serviceCollection.insertOne(add);
+      res.send(result);
+    });
 
     //order api
     // app.get("/orders", verifyJWT, async (req, res) => {
