@@ -26,7 +26,9 @@ async function run() {
     const serviceCollection = client
       .db("sportsPhotgraphy")
       .collection("services");
-    const reviewCollection = client.db("sportsPhotgraphy").collection("review");
+    const reviewCollection = client
+      .db("sportsPhotgraphy")
+      .collection("reviews");
 
     //get limit sevices
     app.get("/services", async (req, res) => {
@@ -77,11 +79,12 @@ async function run() {
     //   res.send(orders);
     // });
 
-    // app.post("/orders", verifyJWT, async (req, res) => {
-    //   const order = req.body;
-    //   const result = await orderCollection.insertOne(order);
-    //   res.send(result);
-    // });
+    //review post data
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
 
     // app.patch("/orders/:id", verifyJWT, async (req, res) => {
     //   const id = req.params.id;
