@@ -110,7 +110,7 @@ async function run() {
       const id = req.params.id;
       const query = { review_id: id };
       const review = reviewCollection.find(query);
-      const items = await review.toArray();
+      const items = await (await review.toArray()).reverse();
       res.send(items);
     });
 
