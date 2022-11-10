@@ -88,7 +88,8 @@ async function run() {
       res.send(result);
     });
 
-    // app.patch("/orders/:id", verifyJWT, async (req, res) => {
+    //update api
+    // app.patch("/reviews/:id", async (req, res) => {
     //   const id = req.params.id;
     //   const status = req.body.status;
     //   const query = { _id: ObjectId(id) };
@@ -99,16 +100,16 @@ async function run() {
     //     },
     //   };
 
-    //   const result = await orderCollection.updateOne(query, updateDoc);
+    //   const result = await reviewCollection.updateOne(query, updateDoc);
     //   res.send(result);
     // });
 
-    // app.delete("/orders/:id", verifyJWT, async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await orderCollection.deleteOne(query);
-    //   res.send(result);
-    // });
+    app.delete("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
