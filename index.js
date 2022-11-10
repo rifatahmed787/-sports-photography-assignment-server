@@ -61,23 +61,25 @@ async function run() {
       res.send(result);
     });
 
-    //order api
-    // app.get("/orders", verifyJWT, async (req, res) => {
-    //   const decoded = req.decoded;
-    //   console.log("inside order api", decoded);
-    //   if (decoded.email !== req.query.email) {
-    //     res.status(403).send({ message: "unauthorized access" });
-    //   }
-    //   let query = {};
-    //   if (req.query.email) {
-    //     query = {
-    //       email: req.query.email,
-    //     };
-    //   }
-    //   const cursor = orderCollection.find(query);
-    //   const orders = await cursor.toArray();
-    //   res.send(orders);
-    // });
+    //my review api
+    app.get("/reviews", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+      const cursor = reviewCollection.find(query);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+    });
+
+    app.get("/review/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const review = await reviewCollection.findOne(query);
+      res.send(review);
+    });
 
     //review post data
     app.post("/reviews", async (req, res) => {
