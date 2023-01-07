@@ -69,7 +69,7 @@ async function run() {
     app.get("/service", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
-      const services = await (await cursor.toArray()).reverse();
+      const services = (await cursor.toArray()).reverse();
       res.send(services);
     });
 
@@ -88,29 +88,20 @@ async function run() {
       res.send(result);
     });
 
-    //my review api
-    app.get("/reviews", verifyJWT, async (req, res) => {
-      const decoded = req.decoded;
-      console.log("inside order api", decoded);
-      if (decoded.email !== req.query.email) {
-        res.status(403).send({ message: "unauthorized access" });
-      }
-      let query = {};
-      if (req.query.email) {
-        query = {
-          email: req.query.email,
-        };
-      }
+    app.get("/reviews/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
       const cursor = reviewCollection.find(query);
       const reviews = await cursor.toArray();
       res.send(reviews);
     });
 
+    //get review for service route review
     app.get("/review/:id", async (req, res) => {
       const id = req.params.id;
       const query = { review_id: id };
       const review = reviewCollection.find(query);
-      const items = await (await review.toArray()).reverse();
+      const items = (await review.toArray()).reverse();
       res.send(items);
     });
 
@@ -122,18 +113,22 @@ async function run() {
     });
 
     //update api
-    app.patch("/reviews/:id", async (req, res) => {
+    app.put("/reviews/:id", async (req, res) => {
       const id = req.params.id;
-      const status = req.body.status;
-      const query = { _id: ObjectId(id) };
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
 
       const updateDoc = {
         $set: {
-          message: message,
+          message: req.body.message,
         },
       };
 
-      const result = await reviewCollection.updateOne(query, updateDoc);
+      const result = await reviewCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
       res.send(result);
     });
 
